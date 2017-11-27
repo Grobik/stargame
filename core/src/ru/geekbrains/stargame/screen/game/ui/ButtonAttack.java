@@ -15,7 +15,7 @@ public class ButtonAttack extends ScaledTouchUpButton {
      * @param pressScale на сколько уменьшить кнопку при нажатии
      */
     public ButtonAttack(TextureAtlas atlas, ActionListener listener, float pressScale) {
-        super(atlas.findRegion("btExit"), listener, pressScale);
+        super(atlas.findRegion("btAttack"), listener, pressScale);
     }
 
     @Override

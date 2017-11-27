@@ -30,7 +30,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     private Sprite2DTexture textureBackground; // текстура для фона
     private Background background; // фон
     private Star star[]; // массив звёзд
-    private TextureAtlas textureAtlas; // утилита для работы с атласами
+    private TextureAtlas buttonAtlas; // утилита для работы с атласами
     private ButtonNewGame buttonNewGame; // кнопка начала новой игры
 
 
@@ -42,13 +42,13 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
         super(game);
         textureBackground = new Sprite2DTexture("textures/bg.png");
         background = new Background(new TextureRegion(textureBackground));
-        textureAtlas = new TextureAtlas("textures/menuAtlas.tpack");
-        TextureRegion regionStar = textureAtlas.findRegion("star");
+        buttonAtlas = new TextureAtlas("textures/buttonAtlas.atlas");
+        TextureRegion regionStar = buttonAtlas.findRegion("star");
         star = new Star[STAR_COUNT];
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(regionStar, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.3f, -0.1f), STAR_HEIGHT);
         }
-        buttonNewGame = new ButtonNewGame(textureAtlas, this, BUTTON_PRESS_SCALE);
+        buttonNewGame = new ButtonNewGame(buttonAtlas, this, BUTTON_PRESS_SCALE);
         buttonNewGame.setHeightProportion(BUTTON_HEIGHT);
     }
 
@@ -101,7 +101,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     @Override
     public void dispose () {
         textureBackground.dispose();
-        textureAtlas.dispose();
+        buttonAtlas.dispose();
         super.dispose();
     }
 

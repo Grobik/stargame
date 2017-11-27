@@ -66,7 +66,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private MainShip mainShip;
     private TrackingStar[] trackingStars;
     private EnemiesEmitter enemiesEmitter;
-    private TextureAtlas textureButtonAttack;
+    private TextureAtlas buttonAtlas;
 
     private Sound soundLaser;
     private Sound soundBullet;
@@ -113,8 +113,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             trackingStars[i] = new TrackingStar(regionStar, Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.3f, -0.1f), STAR_HEIGHT, mainShip.getV());
         }
 
-        textureButtonAttack = new TextureAtlas("textures/menuAtlas.tpack");
-        buttonAttack = new ButtonAttack(textureButtonAttack, this, BUTTON_PRESS_SCALE);
+        buttonAtlas = new TextureAtlas("textures/buttonAtlas.atlas");
+        buttonAttack = new ButtonAttack(buttonAtlas, this, BUTTON_PRESS_SCALE);
         buttonAttack.setHeightProportion(BUTTON_HEIGHT);
 
         this.messageGameOver = new MessageGameOver(atlas);
@@ -278,6 +278,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         music.dispose();
 
         textureBackground.dispose();
+        buttonAtlas.dispose();
         atlas.dispose();
         bulletPool.dispose();
         explosionPool.dispose();
