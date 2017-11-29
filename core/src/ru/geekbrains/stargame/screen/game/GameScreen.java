@@ -29,6 +29,7 @@ import ru.geekbrains.stargame.common.Background;
 import ru.geekbrains.stargame.common.star.TrackingStar;
 import ru.geekbrains.stargame.screen.game.ui.ButtonAttack;
 import ru.geekbrains.stargame.screen.game.ui.ButtonNewGame;
+import ru.geekbrains.stargame.screen.game.ui.ButtonSuperAttack;
 import ru.geekbrains.stargame.screen.game.ui.MessageGameOver;
 
 /**
@@ -55,6 +56,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     private MessageGameOver messageGameOver;
     private ButtonNewGame buttonNewGame;
     private ButtonAttack buttonAttack;
+    private ButtonSuperAttack buttonSuperAttack;
 
     private final BulletPool bulletPool = new BulletPool();
     private ExplosionPool explosionPool;
@@ -117,6 +119,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         buttonAttack = new ButtonAttack(buttonAtlas, this, BUTTON_PRESS_SCALE);
         buttonAttack.setHeightProportion(BUTTON_HEIGHT);
 
+        buttonSuperAttack = new ButtonSuperAttack(buttonAtlas, this, BUTTON_PRESS_SCALE);
+        buttonSuperAttack.setHeightProportion(BUTTON_HEIGHT);
+
         this.messageGameOver = new MessageGameOver(atlas);
         this.buttonNewGame = new ButtonNewGame(atlas, this);
 
@@ -136,6 +141,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         }
         mainShip.resize(worldBounds);
         buttonAttack.resize(worldBounds);
+        buttonSuperAttack.resize(worldBounds);
     }
 
     @Override
@@ -258,6 +264,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         }
         printInfo();
         buttonAttack.draw(batch);
+        if (mainShip.isReloadSuperAttack())
+            buttonSuperAttack.draw(batch);
         batch.end();
     }
 
@@ -294,6 +302,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             startNewGame();
         } else if (src == buttonAttack) {
             mainShip.shoot();
+        } else if (src == buttonSuperAttack) {
+            mainShip.superShoot();
         } else {
             throw new RuntimeException("Unknown src = " + src);
         }
@@ -303,9 +313,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     @Override
     protected void touchDown(Vector2 touch, int pointer) {
         buttonAttack.touchDown(touch, pointer);
+        buttonSuperAttack.touchDown(touch, pointer);
         switch (state) {
             case PLAYING:
-                if (!buttonAttack.getPressed()) {
+                if (!buttonAttack.getPressed() && !buttonSuperAttack.getPressed()) {
                     mainShip.touchDown(touch, pointer);
                 }
                 break;
@@ -318,9 +329,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     @Override
     protected void touchUp(Vector2 touch, int pointer) {
         buttonAttack.touchUp(touch, pointer);
+        buttonSuperAttack.touchUp(touch, pointer);
         switch (state) {
             case PLAYING:
-                if (!buttonAttack.getPressed()) {
+                if (!buttonAttack.getPressed() && !buttonSuperAttack.getPressed()) {
                     mainShip.touchUp(touch, pointer);
                 }
                 break;
@@ -334,7 +346,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     protected void touchDragged(Vector2 touch, int pointer) {
         switch (state) {
             case PLAYING:
-                if (!buttonAttack.getPressed()) {
+                if (!buttonAttack.getPressed() && !buttonSuperAttack.getPressed()) {
                     mainShip.touchDragged(touch, pointer);
                 }
                 break;

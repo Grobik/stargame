@@ -31,8 +31,12 @@ public class Ship extends Sprite {
     protected float bulletHeight; // высота пули
     protected int bulletDamage; // урон
 
-    protected float reloadInterval; // время перезарядки
-    protected float reloadTimer; // таймер для стрельбы
+    protected float reloadAttackInterval; // время перезарядки
+    protected float reloadSuperAttackInterval; // время перезарядки
+    protected float reloadAttackTimer; // таймер для стрельбы
+    protected float reloadSuperAttackTimer; // таймер для стрельбы
+    protected boolean reloadAttack;
+    protected boolean reloadSuperAttack;
 
     protected Sound bulletSound;
 
@@ -83,10 +87,32 @@ public class Ship extends Sprite {
      * Выстрел
      */
     protected void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
-        if (bulletSound.play() == -1) {
-            throw new RuntimeException("Can't play sound");
+        if (reloadAttack) {
+            Bullet bullet = bulletPool.obtain();
+            bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+            if (bulletSound.play() == -1) {
+                throw new RuntimeException("Can't play sound");
+            }
+            reloadAttack = false;
+        }
+    }
+
+    protected void superShoot() {
+        if (reloadSuperAttack) {
+            Bullet[] bullets = new Bullet[25];
+            for (int i = 0; i < bullets.length; i++) {
+                bullets[i] = bulletPool.obtain();
+                if (i == 0)
+                    bullets[i].set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, bulletDamage);
+                else if (i % 2 == 0)
+                    bullets[i].set(this, bulletRegion, pos, bulletV.cpy().add(0.005f * i, 0), bulletHeight, worldBounds, bulletDamage);
+                else
+                    bullets[i].set(this, bulletRegion, pos, bulletV.cpy().add(-0.005f * (i + 1), 0), bulletHeight, worldBounds, bulletDamage);
+            }
+            if (bulletSound.play() == -1) {
+                throw new RuntimeException("Can't play sound");
+            }
+            reloadSuperAttack = false;
         }
     }
 
@@ -107,4 +133,11 @@ public class Ship extends Sprite {
         return hp;
     }
 
+    public boolean isReloadAttack() {
+        return reloadAttack;
+    }
+
+    public boolean isReloadSuperAttack() {
+        return reloadSuperAttack;
+    }
 }

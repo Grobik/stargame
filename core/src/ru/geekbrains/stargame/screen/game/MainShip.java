@@ -45,7 +45,8 @@ public class MainShip extends Ship {
         this.bulletHeight = 0.01f;
         this.bulletV.set(0, 0.5f);
         this.bulletDamage = 1;
-        this.reloadInterval = 0.25f;
+        this.reloadAttackInterval = 0.05f;
+        this.reloadSuperAttackInterval = 5f;
         hp = 100;
         flushDestroy();
     }
@@ -53,6 +54,10 @@ public class MainShip extends Ship {
     @Override
     protected void shoot() {
         super.shoot();
+    }
+
+    protected void superShoot() {
+        super.superShoot();
     }
 
     @Override
@@ -65,10 +70,21 @@ public class MainShip extends Ship {
     public void update(float deltaTime) {
         super.update(deltaTime);
         pos.mulAdd(v, deltaTime);
-        reloadTimer += deltaTime;
-        if (reloadTimer >= reloadInterval) {
-            reloadTimer = 0f;
+        reloadAttackTimer += deltaTime;
+        reloadSuperAttackTimer += deltaTime;
+
+        System.out.println();
+
+        if (reloadAttackTimer >= reloadAttackInterval) {
+            reloadAttackTimer = 0f;
+            reloadAttack = true;
         }
+
+        if (reloadSuperAttackTimer >= reloadSuperAttackInterval) {
+            reloadSuperAttackTimer = 0f;
+            reloadSuperAttack = true;
+        }
+
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();

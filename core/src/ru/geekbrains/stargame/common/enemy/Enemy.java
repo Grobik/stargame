@@ -42,9 +42,10 @@ public class Enemy extends Ship {
                 }
                 break;
             case FIGHT:
-                reloadTimer += deltaTime;
-                if (reloadTimer >= reloadInterval) {
-                    reloadTimer = 0f;
+                reloadAttackTimer += deltaTime;
+                if (reloadAttackTimer >= reloadAttackInterval) {
+                    reloadAttackTimer = 0f;
+                    reloadAttack = true;
                     shoot();
                 }
                 if (getBottom() < worldBounds.getBottom()) {
@@ -74,11 +75,11 @@ public class Enemy extends Ship {
         this.bulletHeight = bulletHeight;
         this.bulletV.set(0f, bulletVY);
         this.bulletDamage = bulletDamage;
-        this.reloadInterval = reloadInterval;
+        this.reloadAttackInterval = reloadInterval;
         this.bulletSound = soundShoot;
         this.hp = hp;
         setHeightProportion(height);
-        reloadTimer = reloadInterval;
+        reloadAttackTimer = reloadInterval;
         v.set(descentV);
         state = State.DESCENT;
     }
